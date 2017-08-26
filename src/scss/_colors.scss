@@ -1,0 +1,33 @@
+$dark: #22252c;
+
+$blue: rgb(59,87,157);
+$light-blue: rgb(37,153,243);
+$red: #F44336;
+$green: #4CAF50;
+
+.red{
+  color: $red;
+}
+
+.blue{
+  color: $blue;
+}
+
+.green{
+  color: $green;
+}
+
+.dark{
+  color: $dark;
+}
+
+.white{
+  color: white;
+}
+.bg-dark{
+  background-color: $dark;
+}
+
+.bg-dark-opacity-80{
+  background-color: rgba(red($dark), green($dark), blue($dark), 0.8);
+}

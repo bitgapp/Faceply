@@ -1,0 +1,46 @@
+{
+  "name": "Faceply",
+  "version": "1.0.0",
+  "description": "A Facebook Messenger AutoReplier App built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "test": "standard",
+    "serve": "gulp serve",
+    "build": "gulp build",
+    "pack": "gulp build && electron-builder --dir",
+    "dist": "gulp build && electron-builder"
+  },
+  "build": {
+    "appId": "com.bitgapp.faceply",
+    "mac": {
+      "icon": "www/img/icon.icns"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "www/img/icon.ico"
+    }
+  },
+  "author": "Roman Kisil",
+  "devDependencies": {
+    "angular": "^1.6.5",
+    "angular-animate": "^1.6.5",
+    "angular-aria": "^1.6.5",
+    "angular-material": "^1.1.4",
+    "angular-messages": "^1.6.5",
+    "babel-preset-es2015": "^6.24.1",
+    "electron": "~1.6.2",
+    "electron-builder": "^19.22.1",
+    "electron-connect": "^0.6.2",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^2.3.2",
+    "gulp-useref": "^3.1.2",
+    "standard": "^10.0.3"
+  },
+  "dependencies": {
+    "electron-google-analytics": "0.0.16",
+    "electron-json-storage": "^3.0.7",
+    "facebook-chat-api": "^1.4.0"
+  }
+}

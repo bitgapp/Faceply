@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"
+  ng-app="Faceply">
+
+<head>
+  <title>Faceply</title>
+  <link href="css/lib.min.css"
+    rel="stylesheet">
+  <script src="js/lib.min.js"></script>
+  <link href="css/main.css"
+    rel="stylesheet">
+  <script src="js/script.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+</head>
+
+<body class="full-screen">
+  <!-- build:remove -->
+  <!-- Connect to server process -->
+  <script>
+    require('electron-connect').client.create()
+  </script>
+  <!-- endbuild -->
+  <md-content ng-show="loading"
+    class="full-screen bg-dark-opacity-80 on-top"
+    layout="column"
+    layout-align="center center">
+    <md-progress-circular class="md-primary"
+      md-diameter="70"></md-progress-circular>
+    <h1 class="white">{{loadingText}}</h1>
+  </md-content>
+
+  <md-content layout="column"
+    layout-align="center center"
+    layout-padding
+    ng-hide="loggedIn"
+    ng-controller="LoginCtrl as c">
+    <br>
+    <img src="img/icon.png"
+      height="110"
+      width="110" />
+    <h2 class="no-margin">Faceply</h2>
+    <h3 class="no-margin">Facebook Messenger Autoresponder</h3>
+    <h4>Log in to Facebook</h4>
+    <input placeholder="Email or Phone Number"
+      ng-model="c.email"
+      type="text"
+      ng-keydown="$event.keyCode === 13 && c.login()"
+      class="width-50">
+    <input placeholder="Password"
+      ng-model="c.password"
+      type="password"
+      ng-keydown="$event.keyCode === 13 && c.login()"
+      class="width-50">
+    <md-button class="md-raised md-primary width-50"
+      ng-click="c.login()">
+      Login
+    </md-button>
+    <h4>
+      <md-icon class="green">lock</md-icon>
+      We only send your password to Facebook
+      <md-icon class="red">favorite</md-icon>
+    </h4>
+    <p class="red">{{c.error}}</p>
+  </md-content>
+  <md-content ng-show="loggedIn"
+    class="full-screen"
+    layout="row"
+    layout-fill
+    ng-controller="MainCtrl as mc">
+
+    <md-sidenav class="md-sidenav-left"
+      md-component-id="left"
+      md-is-locked-open="true">
+      <md-content>
+        <md-list class="md-dense">
+          <md-list-item>
+            <img ng-src="{{mc.user.thumbSrc || 'img/fb_avatar.jpg'}}"
+              class="md-avatar" />
+            <p>{{mc.user.name || 'Loading'}}</p>
+            <md-button class="md-icon-button md-primary"
+              ng-click="mc.logout()">
+              <md-tooltip md-direction="bottom">
+                Logout
+              </md-tooltip>
+              <md-icon>exit_to_app</md-icon>
+            </md-button>
+          </md-list-item>
+          <md-divider></md-divider>
+          <md-list-item class="md-2-line"
+            ng-repeat="group in mc.groups track by $index"
+            ng-class="group.selected ? 'active-list-item' : false"
+            ng-click="mc.selectGroup(group)">
+            <div class="md-list-item-text">
+              <h2 class="no-margin">{{group.name}}</h2>
+
+            </div>
+            <md-switch ng-model="group.enabled"
+              md-invert
+              ng-change="mc.saveUserGroups()"
+              class="md-accent">
+              {{group.enabled ? 'On' : 'Off'}}
+            </md-switch>
+          </md-list-item>
+          <md-list-item>
+            <md-button flex
+              class="md-raised md-primary"
+              ng-click="mc.addGroup()">
+              <md-icon>add</md-icon>
+              New Group
+            </md-button>
+          </md-list-item>
+        </md-list>
+
+      </md-content>
+    </md-sidenav>
+    <md-divider></md-divider>
+    <md-content ng-show="mc.selectedGroup"
+      class="height-100"
+      flex>
+      <md-toolbar class="md-primary">
+        <div class="md-toolbar-tools">
+          <md-button class="md-icon-button"
+            ng-click="mc.editSelectedGroupName()">
+            <md-icon>edit</md-icon>
+          </md-button>
+          <h2 class="md-toolbar-tools">{{mc.selectedGroup.name}}</h2>
+          <md-button class="md-icon-button"
+            ng-click="mc.deleteSelectedGroup()">
+            <md-icon>delete_forever</md-icon>
+          </md-button>
+        </div>
+      </md-toolbar>
+      <md-content layout-padding>
+        <md-input-container class="md-block no-error-spacer no-margin"
+          md-no-float>
+          <input ng-model="mc.search"
+            placeholder="Reply To: (Search)">
+        </md-input-container>
+
+        <md-content class="height-40">
+          <md-list class="md-dense"
+            flex>
+            <md-list-item class="md-2-line"
+              ng-repeat="thread in mc.threads | filter: mc.search | orderBy: 'name'"
+              ng-click="mc.addThreadToSelectedGroup(thread)">
+
+              <img class="md-avatar" ng-show="mc.getThreadImage(thread)" ng-src="{{mc.getThreadImage(thread)}}"/>
+
+              <div ng-hide="mc.getThreadImage(thread)" class="conversation-summary-avatar conversation-summary-avatar-group md-avatar"
+                data-number-of-thumbnails="{{thread.participantIDs.length < 5 ? thread.participantIDs.length - 1 : 3}}">
+                <div ng-repeat="participantID in mc.getThreadParticipantIDs(thread) | limitTo: 3" class="conversation-summary-avatar-group-member-wrapper">
+                  <img class="conversation-summary-avatar-group-member" ng-src="{{mc.getUserImageById(participantID)}}"/>
+                </div>
+              </div>
+
+              <div class="md-list-item-text"
+                layout-margin
+                layout="column">
+                <h3>{{ mc.getThreadName(thread) }}</h3>
+                <p ng-show="!thread.isCanonical">Group Chat</p>
+              </div>
+              <md-checkbox class="md-primary"
+                md-indeterminate="mc.otherGroupIncludesThread(thread)"
+                ng-checked="mc.selectedGroup.threads.includes(thread.threadID)"
+                ng-click="mc.addThreadToSelectedGroup(thread)">
+              </md-checkbox>
+            </md-list-item>
+          </md-list>
+        </md-content>
+        <md-divider></md-divider>
+        <md-content>
+          <md-input-container class="md-block no-error-spacer">
+            <label>Reply Message:</label>
+            <textarea ng-model="mc.selectedGroup.replyMessage"
+              ng-disabled="mc.selectedGroup.reflectMessages"
+              ng-blur="mc.saveUserGroups()"
+              rows="1"
+              md-select-on-focus></textarea>
+          </md-input-container>
+          <div layout="row"
+            layout-align="left center">
+            <div layout="row"
+              layout-margin
+              layout-align="center center">
+              <p>Reply once per</p>
+              <md-input-container class="no-error-spacer no-margin">
+                <input flex
+                  type="number"
+                  min="5"
+                  max="300"
+                  step="1"
+                  class="align-center"
+                  ng-change="mc.saveUserGroups()"
+                  ng-model="mc.selectedGroup.replyTimeout">
+              </md-input-container>
+              <p>seconds</p>
+            </div>
+            <md-slider-container>
+              <md-slider flex
+                ng-model="mc.selectedGroup.replyTimeout"
+                min="5"
+                max="300"
+                step="1"
+                ng-change="mc.saveUserGroups()"
+                class="md-primary">
+              </md-slider>
+            </md-slider-container>
+          </div>
+
+        </md-content>
+
+      </md-content>
+
+    </md-content>
+
+  </md-content>
+</body>
+
+</html>
