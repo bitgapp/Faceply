@@ -1,6 +1,6 @@
 {
   "name": "Faceply.io",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A Facebook Messenger AutoReplier App built with Electron",
   "main": "main.js",
   "repository": {
@@ -24,7 +24,6 @@
       "target": "portable",
       "icon": "www/img/icon.ico"
     },
-    "linux": {},
     "publish": [
       {
         "provider": "github",
