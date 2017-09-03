@@ -12,7 +12,8 @@
     "serve": "gulp serve",
     "build": "gulp build",
     "pack": "gulp build && electron-builder --dir",
-    "dist": "gulp build && electron-builder"
+    "dist": "gulp build && electron-builder",
+    "build-linux": "electron-builder --linux"
   },
   "build": {
     "appId": "com.bitgapp.faceply.io",
@@ -23,6 +24,7 @@
       "target": "portable",
       "icon": "www/img/icon.ico"
     },
+    "linux": {},
     "publish": [
       {
         "provider": "github",
