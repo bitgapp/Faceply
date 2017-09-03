@@ -30,7 +30,6 @@
     content="https://faceply.io">
 
   <script>
-
     (function(i, s, o, g, r, a, m) {
       i['GoogleAnalyticsObject'] = r;
       i[r] = i[r] || function() {
@@ -127,13 +126,70 @@
     <a href=""
       id="mac"
       class="button">Download for Mac OSX</a>
-    <a href=""
-      id="linux"
-      class="button">Download for Linux</a>
   </div>
 
   <img src="screenshot.png"
     width="800">
+
+  <script>
+    function HttpGet(url, callback) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+          callback(null, xmlHttp.responseText);
+        }
+      }
+      xmlHttp.open("GET", url, true); // true for asynchronous
+      xmlHttp.send(null);
+    }
+
+
+
+    var API_URL = 'https://api.github.com'
+    var DOWNLOAD_LINK_ROOT = 'https://github.com/romankisil/Faceply.io/releases/download/'
+    var RELEASES_ROUTE = '/repos/romankisil/Faceply.io/releases'
+    var latestTag = 'v0.1'
+    var defaultWindowsLink = DOWNLOAD_LINK_ROOT + latestTag + '/Faceply.io.exe'
+    var defaultMacLink = DOWNLOAD_LINK_ROOT + latestTag + '/Faceply.io.dmg'
+
+    function setDownloadLinks(links) {
+      links = links || {}
+      links.windows = links.windows || defaultWindowsLink
+      links.mac = links.mac || defaultMacLink
+      var windows = document.getElementById('windows')
+      var mac = document.getElementById('mac')
+      windows.setAttribute('href', links.windows)
+      mac.setAttribute('href', links.mac)
+    }
+
+    function handleError(err) {
+      console.error(err)
+    }
+
+    setDownloadLinks({
+      windows: defaultWindowsLink,
+      mac: defaultMacLink
+    })
+
+    HttpGet(API_URL + RELEASES_ROUTE + '/latest', function(err, resp) {
+      if (err) {
+        handleError(err)
+      } else {
+        try {
+          var json = JSON.parse(resp)
+          var assets = json.assets
+          var links = {}
+          assets.forEach(function(asset) {
+            if (asset.name.indexOf('.dmg') > -1) links.mac = assets.browser_download_url
+            if (asset.name.indexOf('.exe') > -1) links.windows = assets.browser_download_url
+          })
+          setDownloadLinks(links)
+        } catch (e) {
+          handleError(e)
+        }
+      }
+    })
+  </script>
 
 </body>
 
