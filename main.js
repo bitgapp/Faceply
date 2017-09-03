@@ -1,4 +1,3 @@
-
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
@@ -9,6 +8,7 @@ const menu = electron.Menu
 
 const path = require('path')
 const url = require('url')
+const {autoUpdater} = require('electron-updater')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -103,6 +103,7 @@ function createWindow () {
 app.on('ready', () => {
   createWindow()
   createMenus()
+  autoUpdater.checkForUpdates()
 })
 
 // Quit when all windows are closed.
@@ -128,6 +129,34 @@ app.on('activate', function () {
 
 app.on('before-quit', () => {
   forceQuit = true
+})
+
+// -------------------------------------------------------------------
+// Auto updates
+//
+// For details about these events, see the Wiki:
+// https://github.com/electron-userland/electron-builder/wiki/Auto-Update#events
+//
+// The app doesn't need to listen to any events except `update-downloaded`
+//
+// Uncomment any of the below events to listen for them.  Also,
+// look in the previous section to see them being used.
+// -------------------------------------------------------------------
+// autoUpdater.on('checking-for-update', () => {
+// })
+// autoUpdater.on('update-available', (info) => {
+// })
+// autoUpdater.on('update-not-available', (info) => {
+// })
+// autoUpdater.on('error', (err) => {
+// })
+// autoUpdater.on('download-progress', (progressObj) => {
+// })
+autoUpdater.on('update-downloaded', (info) => {
+  // Wait 5 seconds, then quit and install
+  // In your application, you don't need to wait 5 seconds.
+  // You could call autoUpdater.quitAndInstall(); immediately
+  autoUpdater.quitAndInstall()
 })
 
 // In this file you can include the rest of your app's specific main process

@@ -7,7 +7,8 @@
     Facebook,
     Storage,
     User,
-    Analytics
+    Analytics,
+    $mdDialog
   ) {
     const c = this
 
@@ -32,6 +33,7 @@
         Storage.set({
           email: c.email
         }, 'credentials')
+        c.password = null
         Loading.hide()
         $rootScope.loggedIn = true
         $rootScope.$emit('loggedIn')
@@ -54,6 +56,16 @@
           c.email = credentials.email
         }
       })
+
+    $mdDialog.show(
+      $mdDialog.alert()
+      .clickOutsideToClose(true)
+      .title('Faceply is in Beta!')
+      .textContent(`Some bugs and errors are probable.
+        We will fix many issues in the following updates.
+        We appreciate your patience :)`)
+      .ok('Got it!')
+    )
   }
 
   window.angular.module('Faceply')
@@ -66,6 +78,7 @@
       'Storage',
       'User',
       'Analytics',
+      '$mdDialog',
       LoginCtrl
     ])
 })()
