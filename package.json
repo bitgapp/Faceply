@@ -8,7 +8,7 @@
     "url": "https://github.com/romankisil/Faceply.io.git"
   },
   "scripts": {
-    "test": "standard",
+    "lint": "standard",
     "start": "gulp serve",
     "build": "gulp build",
     "pack": "gulp build && electron-builder --dir",

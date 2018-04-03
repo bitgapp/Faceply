@@ -1,4 +1,4 @@
-Contribution are very welcomed :)
+Contributions are very welcomed :)
 
 1. Fork repo
 2. Work on the issue/feature of a new branch

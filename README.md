@@ -21,10 +21,17 @@
 Best way to install is through the website: https://faceply.io
 
 ## How to build?
-```
-npm i
-npm start
+Please install NodeJS and NPM first. Then:
+
+```shell
+$ git clone https://github.com/nodeful/Faceply.io.git
+$ cd Faceply.io/
+$ npm i
+$ npm start
 ```
 
 ## How it works?
 The application is built with [AngularJS](https://angularjs.org/) with [Material Design](http://material.angularjs.org/) running in [Electron](https://electronjs.org/) and interfacing with Facebook through [facebook-chat-api](https://www.npmjs.com/package/facebook-chat-api) package
+
+## How to contribute?
+Please read the [Contribution Guide](https://github.com/nodeful/Faceply.io/blob/master/CONTRIBUTING.md)
