@@ -20,4 +20,11 @@
 ## How to install?
 Best way to install is through the website: https://faceply.io
 
+## How to build?
+```
+npm i
+npm start
+```
+
 ## How it works?
+The application is built with [AngularJS](https://angularjs.org/) with [Material Design](http://material.angularjs.org/) running in [Electron](https://electronjs.org/) and interfacing with Facebook through [facebook-chat-api](https://www.npmjs.com/package/facebook-chat-api) package
